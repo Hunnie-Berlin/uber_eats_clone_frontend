@@ -2,10 +2,16 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 import FormError from "../components/form-error";
+import Logo from "../images/eats-logo.svg";
 import {
   loginMutation,
   loginMutationVariables,
 } from "../__generated__/loginMutation";
+import Button from "../components/button";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { authTokenVar, isLoggedInVar } from "../apollo";
+import { LOCALSTORAGE_TOKEN } from "../constants";
 
 const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -23,13 +29,23 @@ interface ILoginForm {
 }
 
 const Login = () => {
-  const { register, getValues, errors, handleSubmit } = useForm<ILoginForm>();
+  const {
+    register,
+    getValues,
+    errors,
+    handleSubmit,
+    formState,
+  } = useForm<ILoginForm>({
+    mode: "onChange",
+  });
   const onCompleted = (data: loginMutation) => {
     const {
       login: { ok, token },
     } = data;
-    if (ok) {
-      console.log(token);
+    if (ok && token) {
+      localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+      authTokenVar(token);
+      isLoggedInVar(true);
     }
   };
   const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
@@ -53,15 +69,22 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-800">
-      <div className="bg-white w-full max-w-md pt-5 pb-7 rounded-lg text-center">
-        <h3 className="text-3xl text-gray-800">Login</h3>
+    <div className="h-screen flex flex-col items-center mt-10 lg:mt-28">
+      <Helmet>
+        <title> Login | Uber Eats Clone</title>
+      </Helmet>
+      <div className="w-full max-w-screen-sm px-5 flex flex-col items-center">
+        <img src={Logo} alt={"logo"} className="w-56 mb-12" />
+        <h4 className="w-full text-3xl font-medium mb-8">Welcome back</h4>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid gap-3 mt-5 px-5"
+          className="grid gap-3 my-5 w-full"
         >
           <input
-            ref={register({ required: "Email is required" })}
+            ref={register({
+              required: "Email is required",
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            })}
             name="email"
             required
             type="email"
@@ -70,6 +93,9 @@ const Login = () => {
           />
           {errors.email?.message && (
             <FormError errorMessage={errors.email.message} />
+          )}
+          {errors.password?.type === "pattern" && (
+            <FormError errorMessage="Email is not valid" />
           )}
           <input
             ref={register({ required: "Password is required", minLength: 8 })}
@@ -85,13 +111,21 @@ const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage="Password must be more than 8 charactors." />
           )}
-          <button className="btn  mt-3 bg-gray-700">
-            {loading ? "Loading.." : "Log In"}
-          </button>
+          <Button
+            canClick={formState.isValid}
+            actionText="Log In"
+            loading={loading}
+          />
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
         </form>
+        <div>
+          New to Uber?{" "}
+          <Link to="/create-account" className="text-lime-600 hover:underline">
+            Create an account
+          </Link>
+        </div>
       </div>
     </div>
   );
