@@ -1,7 +1,11 @@
 import React from "react";
 
 const LoggedInRouter = () => {
-  return <span>Logged In</span>;
+  return (
+    <div>
+      <h1>Logged In</h1>
+    </div>
+  );
 };
 
 export default LoggedInRouter;
