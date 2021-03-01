@@ -1,6 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router";
 import Restaurant from "../../components/restaurant";
+import { RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
@@ -25,18 +29,16 @@ const RESTAURANTS_QUERY = gql`
       totalPages
       totalResults
       results {
-        id
-        name
-        coverImg
-        category {
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
       }
     }
   }
+  ${RESTAURANT_FRAGMENT}
 `;
+
+interface IFormProps {
+  searchTerm: string;
+}
 
 const Restaurants = () => {
   const [page, setPage] = useState(1);
@@ -56,20 +58,40 @@ const Restaurants = () => {
   const onPreviousPageClick = () => {
     setPage(page - 1);
   };
+  const { register, handleSubmit, getValues } = useForm<IFormProps>();
+  const history = useHistory();
+  const onSearchSubmit = () => {
+    const { searchTerm } = getValues();
+    history.push({
+      pathname: "/search",
+      search: `?term=${searchTerm}`,
+    });
+  };
   return (
     <div>
-      <form className="bg-gray-800  w-full py-40 flex items-center justify-center">
+      <Helmet>
+        <title> Home | Uber Eats Clone</title>
+      </Helmet>
+      <form
+        onSubmit={handleSubmit(onSearchSubmit)}
+        className="bg-gray-800  w-full py-40 flex items-center justify-center"
+      >
         <input
+          ref={register({ required: true, minLength: 3 })}
+          name="searchTerm"
           type="search"
           placeholder="Search Restaurants..."
-          className="input rounded-md border-0  w-6/12"
+          className="input rounded-md border-0 w-3/4 md:w-6/12"
         />
       </form>
       {!loading && (
         <div className="max-w-screen-xl mx-auto mt-8 pb-20">
           <div className="flex justify-around">
-            {data?.allCategories.categories?.map((category, index) => (
-              <div key={index} className="flex flex-col items-center group">
+            {data?.allCategories.categories?.map((category) => (
+              <div
+                key={category.id}
+                className="flex flex-col items-center group"
+              >
                 <div
                   className="w-20 h-20 bg-cover rounded-full group-hover:opacity-70 transition-opacity cursor-pointer"
                   style={{ backgroundImage: `url(${category.coverImg})` }}
@@ -78,7 +100,7 @@ const Restaurants = () => {
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-3 gap-x-7 gap-y-10 mt-16">
+          <div className="grid md:grid-cols-3 gap-x-7 gap-y-10 mt-16 mx-5">
             {data?.restaurants.results?.map((restaurant) => (
               <Restaurant
                 id={restaurant.id + ""}
