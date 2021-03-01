@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "../components/header";
 import useMe from "../hooks/useMe";
-
 import NotFound from "../pages/404";
 import Restaurants from "../pages/client/restaurants";
 import ConfirmEmail from "../pages/user/confirm-email";
@@ -25,7 +24,9 @@ const LoggedInRouter = () => {
   if (!data || loading || error) {
     return (
       <div className="h-screen flex justify-center items-center">
-        <span className="font-medium text-xl tracking-wide">loading...</span>
+        <span className="font-medium text-xl tracking-wide">
+          {error ? error.message : "loading..."}
+        </span>
       </div>
     );
   }

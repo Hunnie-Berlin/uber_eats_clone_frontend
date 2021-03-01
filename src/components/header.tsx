@@ -10,14 +10,14 @@ const Header: React.FC = () => {
   return (
     <>
       {!data?.me.verified && (
-        <div className="bg-red-500 p-3 text-center text-sm text-white tracking-wide">
+        <div className="bg-red-500 p-3 text-center text-base text-white tracking-wide">
           <span>Please verify your email.</span>
         </div>
       )}
       <header className="py-4">
         <div className="w-full px-5 max-w-screen-xl mx-auto flex items-center justify-between">
           <Link to="/">
-            <img src={Logo} alt={"logo"} className="w-24 " />
+            <img src={Logo} alt={"logo"} className="w-36 " />
           </Link>
           <span className="text-xs">
             <Link to="/edit-profile">

@@ -94,7 +94,7 @@ const Login = () => {
           {errors.email?.message && (
             <FormError errorMessage={errors.email.message} />
           )}
-          {errors.password?.type === "pattern" && (
+          {errors.email?.type === "pattern" && (
             <FormError errorMessage="Email is not valid" />
           )}
           <input
