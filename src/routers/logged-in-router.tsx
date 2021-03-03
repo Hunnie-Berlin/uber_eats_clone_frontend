@@ -5,7 +5,7 @@ import useMe from "../hooks/useMe";
 import NotFound from "../pages/404";
 import Category from "../pages/client/category";
 import Restaurants from "../pages/client/restaurants";
-import Search from "../pages/client/search";
+import SearchResults from "../pages/client/searchResults";
 import ConfirmEmail from "../pages/user/confirm-email";
 import EditProfile from "../pages/user/edit-profile";
 
@@ -14,7 +14,7 @@ const ClientRoutes = [
     <Restaurants />
   </Route>,
   <Route path="/search" exact key={2}>
-    <Search />
+    <SearchResults />
   </Route>,
   <Route path="/category/:slug" exact key={3}>
     <Category />

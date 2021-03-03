@@ -1,10 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useForm } from "react-hook-form";
-import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import Pagination from "../../components/pagination";
 import Restaurant from "../../components/restaurant";
+import Search from "../../components/search";
 import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   restaurantsPageQuery,
@@ -34,10 +34,6 @@ const RESTAURANTS_QUERY = gql`
   ${CATEGORY_FRAGMENT}
 `;
 
-interface IFormProps {
-  searchTerm: string;
-}
-
 const Restaurants = () => {
   const [page, setPage] = useState(1);
   const { loading, data } = useQuery<
@@ -56,32 +52,12 @@ const Restaurants = () => {
   const onPreviousPageClick = () => {
     setPage(page - 1);
   };
-  const { register, handleSubmit, getValues } = useForm<IFormProps>();
-  const history = useHistory();
-  const onSearchSubmit = () => {
-    const { searchTerm } = getValues();
-    history.push({
-      pathname: "/search",
-      search: `?term=${searchTerm}`,
-    });
-  };
   return (
     <div>
       <Helmet>
         <title> Home | Uber Eats Clone</title>
       </Helmet>
-      <form
-        onSubmit={handleSubmit(onSearchSubmit)}
-        className="bg-gray-800  w-full py-40 flex items-center justify-center"
-      >
-        <input
-          ref={register({ required: true, minLength: 3 })}
-          name="searchTerm"
-          type="search"
-          placeholder="Search Restaurants..."
-          className="input rounded-md border-0 w-3/4 md:w-6/12"
-        />
-      </form>
+      <Search />
       {!loading && (
         <div className="max-w-screen-xl mx-auto mt-8 pb-20">
           <div className="flex justify-around">
@@ -93,7 +69,8 @@ const Restaurants = () => {
                     style={{ backgroundImage: `url(${category.coverImg})` }}
                   ></div>
                   <span className="text-sm font-bold mt-2">
-                    {category.name}
+                    {category.name.charAt(0).toUpperCase() +
+                      category.name.slice(1)}
                   </span>
                 </div>
               </Link>
@@ -110,31 +87,12 @@ const Restaurants = () => {
               />
             ))}
           </div>
-          <div className="grid grid-cols-3 text-center max-w-md mx-auto place-items-center mt-10">
-            {page > 1 ? (
-              <button
-                onClick={onPreviousPageClick}
-                className="text-xl font-medium text-gray-100 hover:text-lime-700 transition-colors w-8 h-8 rounded-full bg-lime-500 focus:outline-none"
-              >
-                &larr;
-              </button>
-            ) : (
-              <div></div>
-            )}
-            <span className="text-xl font-medium text-lime-600">
-              Page {page} of {data?.restaurants.totalPages}
-            </span>
-            {page !== data?.restaurants.totalPages ? (
-              <button
-                onClick={onNextPageClick}
-                className="text-xl font-medium text-gray-100 hover:text-lime-700 transition-colors w-8 h-8 rounded-full bg-lime-500 focus:outline-none"
-              >
-                &rarr;
-              </button>
-            ) : (
-              <div></div>
-            )}
-          </div>
+          <Pagination
+            page={page}
+            totalPages={data?.restaurants.totalPages || 1}
+            onNextPageClick={onNextPageClick}
+            onPreviousPageClick={onPreviousPageClick}
+          />
         </div>
       )}
     </div>
