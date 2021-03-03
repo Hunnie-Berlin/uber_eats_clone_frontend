@@ -13,16 +13,10 @@ const ClientRoutes = [
   <Route path="/" exact key={1}>
     <Restaurants />
   </Route>,
-  <Route path="/confirm" exact key={2}>
-    <ConfirmEmail />
-  </Route>,
-  <Route path="/edit-profile" exact key={3}>
-    <EditProfile />
-  </Route>,
-  <Route path="/search" exact key={4}>
+  <Route path="/search" exact key={2}>
     <Search />
   </Route>,
-  <Route path="/category/:slug" exact key={5}>
+  <Route path="/category/:slug" exact key={3}>
     <Category />
   </Route>,
 ];
@@ -43,6 +37,12 @@ const LoggedInRouter = () => {
       <Header />
       <Switch>
         {data.me.role === "Client" && ClientRoutes}
+        <Route path="/confirm" exact key={2}>
+          <ConfirmEmail />
+        </Route>
+        <Route path="/edit-profile" exact key={3}>
+          <EditProfile />
+        </Route>
         <Route>
           <NotFound />
         </Route>
