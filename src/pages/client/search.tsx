@@ -43,7 +43,7 @@ const Search = () => {
         },
       },
     });
-  }, [history, location.search]);
+  }, [history, location.search, startToSearch]);
   console.log(loading, data, called);
   return (
     <div>
