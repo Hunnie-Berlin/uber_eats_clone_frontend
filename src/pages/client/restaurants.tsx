@@ -1,7 +1,8 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useReactiveVar } from "@apollo/client";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import { restaurantsPage } from "../../apollo";
 import Pagination from "../../components/pagination";
 import Restaurant from "../../components/restaurant";
 import Search from "../../components/search";
@@ -35,7 +36,7 @@ const RESTAURANTS_QUERY = gql`
 `;
 
 const Restaurants = () => {
-  const [page, setPage] = useState(1);
+  const page = useReactiveVar(restaurantsPage);
   const { loading, data } = useQuery<
     restaurantsPageQuery,
     restaurantsPageQueryVariables
@@ -47,10 +48,10 @@ const Restaurants = () => {
     },
   });
   const onNextPageClick = () => {
-    setPage(page + 1);
+    restaurantsPage(page + 1);
   };
   const onPreviousPageClick = () => {
-    setPage(page - 1);
+    restaurantsPage(page - 1);
   };
   return (
     <div>

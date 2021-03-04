@@ -1,8 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import {
-  faLocationArrow,
-  faMapMarkerAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useParams } from "react-router";
@@ -32,7 +29,7 @@ const RESTAURANT_QUERY = gql`
 
 const RestaurantDetail = () => {
   const params = useParams<IRestaurantParams>();
-  const { loading, data } = useQuery<restaurantQuery, restaurantQueryVariables>(
+  const { data } = useQuery<restaurantQuery, restaurantQueryVariables>(
     RESTAURANT_QUERY,
     {
       variables: {

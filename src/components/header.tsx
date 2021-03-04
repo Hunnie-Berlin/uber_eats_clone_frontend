@@ -2,6 +2,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Link } from "react-router-dom";
+import { restaurantsPage } from "../apollo";
 import useMe from "../hooks/useMe";
 import Logo from "../images/eats-logo.svg";
 
@@ -16,7 +17,7 @@ const Header: React.FC = () => {
       )}
       <header className="py-4">
         <div className="w-full px-5 max-w-screen-xl mx-auto flex items-center justify-between">
-          <Link to="/">
+          <Link to="/" onClick={() => restaurantsPage(1)}>
             <img src={Logo} alt={"logo"} className="w-36 " />
           </Link>
           <span className="text-xs">
