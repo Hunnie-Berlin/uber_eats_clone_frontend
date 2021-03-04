@@ -10,7 +10,6 @@ import {
 import Search from "../../components/search";
 import Restaurant from "../../components/restaurant";
 import Pagination from "../../components/pagination";
-import GoBackBtn from "../../components/go-back-button";
 
 const CATEGORY_QUERY = gql`
   query categoryQuery($input: CategoryInput!) {
@@ -84,7 +83,6 @@ const Category = () => {
               />
             ))}
           </div>
-          <GoBackBtn />
           <Pagination
             page={page}
             totalPages={data?.category.totalPages || 1}

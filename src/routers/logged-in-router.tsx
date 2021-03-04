@@ -4,6 +4,7 @@ import Header from "../components/header";
 import useMe from "../hooks/useMe";
 import NotFound from "../pages/404";
 import Category from "../pages/client/category";
+import RestaurantDetail from "../pages/client/restaurantDetail";
 import Restaurants from "../pages/client/restaurants";
 import SearchResults from "../pages/client/searchResults";
 import ConfirmEmail from "../pages/user/confirm-email";
@@ -18,6 +19,9 @@ const ClientRoutes = [
   </Route>,
   <Route path="/category/:slug" exact key={3}>
     <Category />
+  </Route>,
+  <Route path="/restaurants/:id" exact key={4}>
+    <RestaurantDetail />
   </Route>,
 ];
 

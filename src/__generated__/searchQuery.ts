@@ -12,6 +12,7 @@ import { SearchRestaurantInput } from "./globalTypes";
 export interface searchQuery_searchRestaurant_restaurants_category {
   __typename: "Category";
   name: string;
+  slug: string;
 }
 
 export interface searchQuery_searchRestaurant_restaurants {
