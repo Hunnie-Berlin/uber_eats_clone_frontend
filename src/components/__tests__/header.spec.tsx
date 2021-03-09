@@ -1,10 +1,9 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { BrowserRouter as Router } from "react-router-dom";
-import { getByRole, render, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import React from "react";
 import Header from "../header";
 import { ME_QUERY } from "../../hooks/useMe";
-import userEvent from "@testing-library/user-event";
 
 describe("<Header />", () => {
   it("renders verify banner", async () => {

@@ -1,12 +1,9 @@
 import { ApolloProvider } from "@apollo/client";
 import { createMockClient, MockApolloClient } from "mock-apollo-client";
-import { render, RenderResult, waitFor } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { render, RenderResult, waitFor } from "../../test-utils";
 import { LOGIN_MUTATION } from "../login";
-
 import React from "react";
 import Login from "../login";
-import { HelmetProvider } from "react-helmet-async";
 import userEvent from "@testing-library/user-event";
 
 describe("<Login />", () => {
@@ -17,11 +14,7 @@ describe("<Login />", () => {
       mockedClient = createMockClient();
       renderResult = render(
         <ApolloProvider client={mockedClient}>
-          <HelmetProvider>
-            <Router>
-              <Login />
-            </Router>
-          </HelmetProvider>
+          <Login />
         </ApolloProvider>
       );
     });
@@ -78,7 +71,7 @@ describe("<Login />", () => {
       email: "test@email.com",
       password: "test1234",
     };
-    const mockedMutationRespose = jest.fn().mockResolvedValue({
+    const mockedMutationResponse = jest.fn().mockResolvedValue({
       data: {
         login: {
           ok: true,
@@ -88,14 +81,14 @@ describe("<Login />", () => {
       },
     });
     jest.spyOn(Storage.prototype, "setItem");
-    mockedClient.setRequestHandler(LOGIN_MUTATION, mockedMutationRespose);
+    mockedClient.setRequestHandler(LOGIN_MUTATION, mockedMutationResponse);
     await waitFor(() => {
       userEvent.type(email, formData.email);
       userEvent.type(password, formData.password);
       userEvent.click(submitBtn);
     });
-    expect(mockedMutationRespose).toHaveBeenCalledTimes(1);
-    expect(mockedMutationRespose).toHaveBeenCalledWith({
+    expect(mockedMutationResponse).toHaveBeenCalledTimes(1);
+    expect(mockedMutationResponse).toHaveBeenCalledWith({
       loginInput: formData,
     });
     const errorMessage = getByRole("alert");
