@@ -1,7 +1,7 @@
 import { gql, useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { useHistory, useLocation } from "react-router";
+import PageTitle from "../../components/page-title";
 import Pagination from "../../components/pagination";
 import Restaurant from "../../components/restaurant";
 import Search from "../../components/search";
@@ -56,9 +56,7 @@ const SearchResults = () => {
   };
   return (
     <div>
-      <Helmet>
-        <title>Search | Uber Eats Clone</title>
-      </Helmet>
+      <PageTitle title="Search" />
       <Search />
       {!loading && data?.searchRestaurant.restaurants && (
         <div className="max-w-screen-xl mx-auto mt-8 pb-20">

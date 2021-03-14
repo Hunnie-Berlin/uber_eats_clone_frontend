@@ -9,9 +9,9 @@ import {
 } from "../__generated__/loginMutation";
 import Button from "../components/button";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { authTokenVar, isLoggedInVar } from "../apollo";
 import { LOCALSTORAGE_TOKEN } from "../constants";
+import PageTitle from "../components/page-title";
 
 export const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -70,9 +70,7 @@ const Login = () => {
 
   return (
     <div className="h-screen flex flex-col items-center mt-10 lg:mt-28">
-      <Helmet>
-        <title> Login | Uber Eats Clone</title>
-      </Helmet>
+      <PageTitle title="Login" />
       <div className="w-full max-w-screen-sm px-5 flex flex-col items-center">
         <img src={Logo} alt={"logo"} className="w-56 mb-12" />
         <h4 className="w-full text-3xl font-medium mb-8">Welcome back</h4>

@@ -1,8 +1,8 @@
 import { gql, useQuery, useReactiveVar } from "@apollo/client";
-import React, { useState } from "react";
-import { Helmet } from "react-helmet-async";
+import React from "react";
 import { Link } from "react-router-dom";
 import { restaurantsPage } from "../../apollo";
+import PageTitle from "../../components/page-title";
 import Pagination from "../../components/pagination";
 import Restaurant from "../../components/restaurant";
 import Search from "../../components/search";
@@ -55,9 +55,7 @@ const Restaurants = () => {
   };
   return (
     <div>
-      <Helmet>
-        <title> Home | Uber Eats Clone</title>
-      </Helmet>
+      <PageTitle title="Home" />
       <Search />
       {!loading && (
         <div className="max-w-screen-xl mx-auto mt-8 pb-20">

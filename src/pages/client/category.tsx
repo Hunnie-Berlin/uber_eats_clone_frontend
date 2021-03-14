@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { useParams } from "react-router";
-import { Helmet } from "react-helmet-async";
 import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   categoryQuery,
@@ -10,6 +9,7 @@ import {
 import Search from "../../components/search";
 import Restaurant from "../../components/restaurant";
 import Pagination from "../../components/pagination";
+import PageTitle from "../../components/page-title";
 
 const CATEGORY_QUERY = gql`
   query categoryQuery($input: CategoryInput!) {
@@ -56,12 +56,9 @@ const Category = () => {
   };
   return (
     <div>
-      <Helmet>
-        <title>
-          {params.slug.charAt(0).toUpperCase() + params.slug.slice(1)} | Uber
-          Eats Clone
-        </title>
-      </Helmet>
+      <PageTitle
+        title={params.slug.charAt(0).toUpperCase() + params.slug.slice(1)}
+      />
       <Search />
       {!loading && data?.category.restaurants && (
         <div className="max-w-screen-xl mx-auto mt-8 pb-20">

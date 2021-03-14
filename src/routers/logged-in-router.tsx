@@ -7,22 +7,50 @@ import Category from "../pages/client/category";
 import RestaurantDetail from "../pages/client/restaurantDetail";
 import Restaurants from "../pages/client/restaurants";
 import SearchResults from "../pages/client/searchResults";
+import AddRestaurant from "../pages/owner/add-restaurant";
+import MyRestaurants from "../pages/owner/my-restaurants";
 import ConfirmEmail from "../pages/user/confirm-email";
 import EditProfile from "../pages/user/edit-profile";
 
-const ClientRoutes = [
-  <Route path="/" exact key={1}>
-    <Restaurants />
-  </Route>,
-  <Route path="/search" exact key={2}>
-    <SearchResults />
-  </Route>,
-  <Route path="/category/:slug" exact key={3}>
-    <Category />
-  </Route>,
-  <Route path="/restaurants/:id" exact key={4}>
-    <RestaurantDetail />
-  </Route>,
+const clientRoutes = [
+  {
+    path: "/",
+    component: <Restaurants />,
+  },
+  {
+    path: "/search",
+    component: <SearchResults />,
+  },
+  {
+    path: "/category/:slug",
+    component: <Category />,
+  },
+  {
+    path: "/restaurants/:id",
+    component: <RestaurantDetail />,
+  },
+];
+
+const commonRoutes = [
+  {
+    path: "/confirm",
+    component: <ConfirmEmail />,
+  },
+  {
+    path: "/edit-profile",
+    component: <EditProfile />,
+  },
+];
+
+const ownerRoutes = [
+  {
+    path: "/",
+    component: <MyRestaurants />,
+  },
+  {
+    path: "/add-restaurant",
+    component: <AddRestaurant />,
+  },
 ];
 
 const LoggedInRouter = () => {
@@ -40,13 +68,25 @@ const LoggedInRouter = () => {
     <Router>
       <Header />
       <Switch>
-        {data.me.role === "Client" && ClientRoutes}
-        <Route path="/confirm" exact key={2}>
-          <ConfirmEmail />
-        </Route>
-        <Route path="/edit-profile" exact key={3}>
-          <EditProfile />
-        </Route>
+        {data.me.role &&
+          commonRoutes.map((route) => (
+            <Route key={route.path} path={route.path} exact>
+              {route.component}
+            </Route>
+          ))}
+        {data.me.role === "Client" &&
+          clientRoutes.map((route) => (
+            <Route key={route.path} path={route.path} exact>
+              {route.component}
+            </Route>
+          ))}
+        {data.me.role === "Owner" &&
+          ownerRoutes.map((route) => (
+            <Route key={route.path} path={route.path} exact>
+              {route.component}
+            </Route>
+          ))}
+
         <Route>
           <NotFound />
         </Route>

@@ -5,12 +5,12 @@ import FormError from "../components/form-error";
 import Logo from "../images/eats-logo.svg";
 import Button from "../components/button";
 import { Link, useHistory } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { UserRole } from "../__generated__/globalTypes";
 import {
   createAccountMutation,
   createAccountMutationVariables,
 } from "../__generated__/createAccountMutation";
+import PageTitle from "../components/page-title";
 
 export const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccountMutation($createAccountInput: CreateAccountInput!) {
@@ -73,9 +73,7 @@ const CreateAccount = () => {
   };
   return (
     <div className="h-screen flex flex-col items-center mt-10 lg:mt-28">
-      <Helmet>
-        <title> Create Account | Uber Eats Clone</title>
-      </Helmet>
+      <PageTitle title="Create Account" />
       <div className="w-full max-w-screen-sm px-5 flex flex-col items-center">
         <img src={Logo} alt={"logo"} className="w-56 mb-12" />
         <h4 className="w-full text-3xl font-medium mb-8">Let's get started</h4>

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import PageTitle from "../../components/page-title";
 import { RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   restaurantQuery,
@@ -41,6 +42,9 @@ const RestaurantDetail = () => {
   );
   return (
     <div>
+      <PageTitle
+        title={data?.restaurant.restaurant?.name || "Restaurant Detail"}
+      />
       <div
         className="py-48 bg-cover bg-center bg-gray-600"
         style={{
