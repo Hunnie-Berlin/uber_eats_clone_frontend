@@ -5,7 +5,11 @@ import { Link } from "react-router-dom";
 import Dish from "../../components/dish";
 import * as V from "victory";
 import PageTitle from "../../components/page-title";
-import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
+import {
+  DISH_FRAGMENT,
+  ORDER_CHART_FRAGMENT,
+  RESTAURANT_FRAGMENT,
+} from "../../fragments";
 import {
   myRestaurantQuery,
   myRestaurantQueryVariables,
@@ -21,11 +25,15 @@ export const MY_RESTAURANT_QUERY = gql`
         menu {
           ...DishParts
         }
+        orders {
+          ...OrderChartParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
   ${DISH_FRAGMENT}
+  ${ORDER_CHART_FRAGMENT}
 `;
 
 interface IParams {
@@ -44,15 +52,7 @@ const MyRestaurant = () => {
       },
     }
   );
-  const chartData = [
-    { day: 1, orders: 3000 },
-    { day: 2, orders: 1500 },
-    { day: 3, orders: 4250 },
-    { day: 4, orders: 2300 },
-    { day: 5, orders: 5670 },
-    { day: 6, orders: 8900 },
-    { day: 7, orders: 6830 },
-  ];
+  console.log(data?.myRestaurant.restaurant.orders);
   return (
     <div className="container">
       <PageTitle
@@ -109,6 +109,49 @@ const MyRestaurant = () => {
           >
             Buy Promotion &rarr;
           </Link>
+        </div>
+        <div className="mt-20 mb-10">
+          <h2 className="text-2xl font-medium text-center">sales</h2>
+          <div className="mt-5 mx-10">
+            <V.VictoryChart
+              theme={V.VictoryTheme.material}
+              domainPadding={40}
+              height={400}
+              width={window.innerWidth}
+              containerComponent={
+                <V.VictoryZoomContainer
+                  zoomDimension="x"
+                  minimumZoom={{ x: 4 }}
+                />
+              }
+            >
+              <V.VictoryLine
+                labels={({ datum }) => `$${datum.y}`}
+                style={{
+                  data: { stroke: "tomato", strokeWidth: 2 },
+                  labels: { fill: "teal", fontSize: 20 },
+                }}
+                interpolation={"monotoneX"}
+                data={data?.myRestaurant.restaurant.orders.map((item) => ({
+                  x: item.createdAt,
+                  y: item.total,
+                }))}
+              />
+              <V.VictoryAxis
+                tickLabelComponent={<V.VictoryLabel renderInPortal />}
+                style={{
+                  tickLabels: {
+                    fontSize: 20,
+                    fontWeight: 500,
+                    fill: "black",
+                    angle: 45,
+                  },
+                  axisLabel: { fontSize: 28, fill: "darkgreen" },
+                }}
+                tickFormat={(tick) => `${new Date(tick).toLocaleDateString()}`}
+              />
+            </V.VictoryChart>
+          </div>
         </div>
       </div>
     </div>
