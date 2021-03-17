@@ -120,7 +120,7 @@ const AddRestaurant = () => {
         </h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid gap-3 my-5 w-full"
+          className="grid max-w-screen-sm gap-3 w-full my-5"
         >
           <input
             className="input"

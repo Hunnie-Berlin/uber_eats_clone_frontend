@@ -20,7 +20,6 @@ export const MY_RESTAURANTS = gql`
 
 const MyRestaurants = () => {
   const { data } = useQuery<myRestaurantsQuery>(MY_RESTAURANTS);
-  console.log(data);
   return (
     <div className="container">
       <PageTitle title="My Restaurants" />

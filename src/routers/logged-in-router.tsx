@@ -7,7 +7,9 @@ import Category from "../pages/client/category";
 import RestaurantDetail from "../pages/client/restaurantDetail";
 import Restaurants from "../pages/client/restaurants";
 import SearchResults from "../pages/client/searchResults";
+import AddDish from "../pages/owner/add-dish";
 import AddRestaurant from "../pages/owner/add-restaurant";
+import MyRestaurant from "../pages/owner/my-restaurant";
 import MyRestaurants from "../pages/owner/my-restaurants";
 import ConfirmEmail from "../pages/user/confirm-email";
 import EditProfile from "../pages/user/edit-profile";
@@ -50,6 +52,14 @@ const ownerRoutes = [
   {
     path: "/add-restaurant",
     component: <AddRestaurant />,
+  },
+  {
+    path: "/restaurants/:id",
+    component: <MyRestaurant />,
+  },
+  {
+    path: "/restaurants/:id/add-dish",
+    component: <AddDish />,
   },
 ];
 
