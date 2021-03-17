@@ -52,7 +52,17 @@ const MyRestaurant = () => {
       },
     }
   );
-  console.log(data?.myRestaurant.restaurant.orders);
+  let chartData: any[] = [];
+  if (data) {
+    chartData = [...data.myRestaurant.restaurant.orders]
+      .sort((a, b) => {
+        return a.id - b.id;
+      })
+      .map((item) => ({
+        x: item.createdAt,
+        y: item.total,
+      }));
+  }
   return (
     <div className="container">
       <PageTitle
@@ -132,10 +142,7 @@ const MyRestaurant = () => {
                   labels: { fill: "teal", fontSize: 20 },
                 }}
                 interpolation={"monotoneX"}
-                data={data?.myRestaurant.restaurant.orders.map((item) => ({
-                  x: item.createdAt,
-                  y: item.total,
-                }))}
+                data={chartData}
               />
               <V.VictoryAxis
                 tickLabelComponent={<V.VictoryLabel renderInPortal />}
@@ -146,7 +153,6 @@ const MyRestaurant = () => {
                     fill: "black",
                     angle: 45,
                   },
-                  axisLabel: { fontSize: 28, fill: "darkgreen" },
                 }}
                 tickFormat={(tick) => `${new Date(tick).toLocaleDateString()}`}
               />
