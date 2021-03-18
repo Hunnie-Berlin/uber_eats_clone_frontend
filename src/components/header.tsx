@@ -1,13 +1,24 @@
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { useApolloClient } from "@apollo/client";
+import { faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Link } from "react-router-dom";
-import { restaurantsPage } from "../apollo";
+import { Link, useHistory } from "react-router-dom";
+import { restaurantsPage, isLoggedInVar, authTokenVar } from "../apollo";
+import { LOCALSTORAGE_TOKEN } from "../constants";
 import useMe from "../hooks/useMe";
 import Logo from "../images/eats-logo.svg";
 
 const Header: React.FC = () => {
   const { data } = useMe();
+  const history = useHistory();
+  const client = useApolloClient();
+  const onLogoutClick = () => {
+    localStorage.removeItem(LOCALSTORAGE_TOKEN);
+    isLoggedInVar(false);
+    authTokenVar(null);
+    client.clearStore();
+    history.push("/");
+  };
   return (
     <>
       {!data?.me.verified && (
@@ -24,6 +35,11 @@ const Header: React.FC = () => {
             <Link to="/edit-profile">
               <FontAwesomeIcon icon={faUser} className="text-xl" />
             </Link>
+            <FontAwesomeIcon
+              icon={faSignOutAlt}
+              className="text-xl ml-10 cursor-pointer"
+              onClick={onLogoutClick}
+            />
           </span>
         </div>
       </header>
