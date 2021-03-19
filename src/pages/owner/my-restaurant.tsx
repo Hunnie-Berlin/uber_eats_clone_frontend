@@ -52,17 +52,38 @@ const MyRestaurant = () => {
       },
     }
   );
+  let datas: any[] = [];
+  let dates: string[] = [];
   let chartData: any[] = [];
   if (data) {
-    chartData = [...data.myRestaurant.restaurant.orders]
+    datas = [
+      ...data.myRestaurant.restaurant.orders.filter(
+        (order) => order.status === "Dilevered"
+      ),
+    ]
       .sort((a, b) => {
         return a.id - b.id;
       })
       .map((item) => ({
-        x: item.createdAt,
+        x: item.createdAt.split("T")[0],
         y: item.total,
       }));
+    datas.forEach((aData) => {
+      if (!dates.includes(aData.x)) {
+        dates.push(aData.x);
+      }
+    });
+    dates.forEach((date) => {
+      const dataObj = { x: date, y: 0 };
+      datas.forEach((aData) => {
+        if (aData.x === date) {
+          dataObj.y = +(dataObj.y + aData.y).toFixed(2);
+        }
+      });
+      chartData.push(dataObj);
+    });
   }
+
   return (
     <div className="container">
       <PageTitle
@@ -154,7 +175,8 @@ const MyRestaurant = () => {
                     angle: 45,
                   },
                 }}
-                tickFormat={(tick) => `${new Date(tick).toLocaleDateString()}`}
+                tickFormat={(tick) => `${tick}`}
+                // tickFormat={(tick) => `${new Date(tick).toLocaleDateString()}`}
               />
             </V.VictoryChart>
           </div>

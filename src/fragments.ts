@@ -47,5 +47,6 @@ export const ORDER_CHART_FRAGMENT = gql`
     id
     createdAt
     total
+    status
   }
 `;
