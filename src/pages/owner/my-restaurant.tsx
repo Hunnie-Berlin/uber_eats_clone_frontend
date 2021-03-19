@@ -94,7 +94,7 @@ const MyRestaurant = () => {
             </div>
           </>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-10 mt-16 mb-5 mx-5 xl:mx-0">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-10 mt-16 mb-5 mx-5 xl:mx-auto">
             {data?.myRestaurant.restaurant.menu.map((dish) => (
               <Dish
                 key={dish.id}
@@ -114,7 +114,7 @@ const MyRestaurant = () => {
             Add Dish &rarr;
           </Link>
           <Link
-            to={``}
+            to={`/`}
             className="w-60 mr-8 text-white bg-lime-500 hover:bg-lime-600 transition-colors py-3 px-10 rounded-md  text-center active:animate-clickAnimation mt-2"
           >
             Buy Promotion &rarr;
