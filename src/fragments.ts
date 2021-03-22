@@ -1,4 +1,3 @@
-import { isLoggedInVar } from "./apollo";
 import { gql } from "@apollo/client";
 
 export const RESTAURANT_FRAGMENT = gql`

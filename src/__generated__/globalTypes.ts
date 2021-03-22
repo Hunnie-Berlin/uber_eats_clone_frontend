@@ -69,6 +69,11 @@ export interface DishOptionInputType {
   extraCharge?: number | null;
 }
 
+export interface EditOrderInput {
+  id: number;
+  status: OrderStatus;
+}
+
 export interface EditProfileInput {
   email?: string | null;
   password?: string | null;
