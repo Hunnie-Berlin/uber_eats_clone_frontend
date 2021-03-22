@@ -1,3 +1,4 @@
+import { isLoggedInVar } from "./apollo";
 import { gql } from "@apollo/client";
 
 export const RESTAURANT_FRAGMENT = gql`
@@ -48,5 +49,22 @@ export const ORDER_CHART_FRAGMENT = gql`
     createdAt
     total
     status
+  }
+`;
+
+export const ORDER_FRAGEMENT = gql`
+  fragment OrderParts on Order {
+    id
+    status
+    total
+    driver {
+      email
+    }
+    customer {
+      email
+    }
+    restaurant {
+      name
+    }
   }
 `;

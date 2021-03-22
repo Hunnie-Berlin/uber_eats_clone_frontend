@@ -78,7 +78,11 @@ const RestaurantDetail = () => {
     createOrderMutationVariables
   >(CREATE_ORDER_MUTATION, { onCompleted });
   const goToCheckout = () => {
-    if (orderItems.length !== 0 && window.confirm("Are you sure to order?")) {
+    if (
+      orderItems.length !== 0 &&
+      window.confirm("Are you sure to order?") &&
+      !placingOrder
+    ) {
       setCanOrder(false);
       createOrder({
         variables: {
