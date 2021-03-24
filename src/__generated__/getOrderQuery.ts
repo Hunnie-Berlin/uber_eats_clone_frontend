@@ -17,6 +17,7 @@ export interface getOrderQuery_getOrder_order_driver {
 export interface getOrderQuery_getOrder_order_customer {
   __typename: "User";
   email: string;
+  address: string | null;
 }
 
 export interface getOrderQuery_getOrder_order_restaurant {

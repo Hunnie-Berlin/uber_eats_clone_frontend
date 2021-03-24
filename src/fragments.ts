@@ -61,6 +61,7 @@ export const ORDER_FRAGEMENT = gql`
     }
     customer {
       email
+      address
     }
     restaurant {
       name

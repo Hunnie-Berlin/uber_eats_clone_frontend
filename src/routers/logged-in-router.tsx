@@ -1,8 +1,14 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useHistory,
+} from "react-router-dom";
 import Header from "../components/header";
 import useMe from "../hooks/useMe";
 import NotFound from "../pages/404";
+import AddAddress from "../pages/client/add-address";
 import Category from "../pages/client/category";
 import RestaurantDetail from "../pages/client/restaurantDetail";
 import Restaurants from "../pages/client/restaurants";
@@ -33,6 +39,10 @@ const clientRoutes = [
   {
     path: "/restaurants/:id",
     component: <RestaurantDetail />,
+  },
+  {
+    path: "/add-address",
+    component: <AddAddress />,
   },
 ];
 
@@ -78,6 +88,7 @@ const deliveryRoutes = [
 
 const LoggedInRouter = () => {
   const { data, loading, error } = useMe();
+  const history = useHistory();
   if (!data || loading || error) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -97,6 +108,11 @@ const LoggedInRouter = () => {
               {route.component}
             </Route>
           ))}
+        {data.me.role === UserRole.Client && !data.me.address && (
+          <Route>
+            <AddAddress />
+          </Route>
+        )}
         {data.me.role === UserRole.Client &&
           clientRoutes.map((route) => (
             <Route key={route.path} path={route.path} exact>
@@ -115,7 +131,6 @@ const LoggedInRouter = () => {
               {route.component}
             </Route>
           ))}
-
         <Route>
           <NotFound />
         </Route>

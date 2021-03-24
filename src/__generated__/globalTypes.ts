@@ -21,6 +21,11 @@ export enum UserRole {
   Owner = "Owner",
 }
 
+export interface AddAddressInput {
+  id: number;
+  address?: string | null;
+}
+
 export interface CategoryInput {
   page?: number | null;
   slug: string;
@@ -113,6 +118,10 @@ export interface RestaurantsInput {
 export interface SearchRestaurantInput {
   page?: number | null;
   query: string;
+}
+
+export interface TakeOrderInput {
+  id: number;
 }
 
 export interface VerifyEmailInput {

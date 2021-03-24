@@ -12,7 +12,7 @@ import {
   getOrderQuery,
   getOrderQueryVariables,
 } from "../../__generated__/getOrderQuery";
-import { OrderStatus } from "../../__generated__/globalTypes";
+import { OrderStatus, UserRole } from "../../__generated__/globalTypes";
 import { orderUpdates } from "../../__generated__/orderUpdates";
 
 const GET_ORDER_QUERY = gql`
@@ -89,7 +89,7 @@ const Order = () => {
     }
   }, [data, id, subscribeToMore]);
 
-  const onButtonClick = (newStatus: OrderStatus) => {
+  const onOwnersButtonClick = (newStatus: OrderStatus) => {
     editOrder({
       variables: {
         input: {
@@ -129,16 +129,16 @@ const Order = () => {
               {data?.getOrder.order?.driver?.email || "Not yet."}
             </span>
           </div>
-          {userData?.me.role === "Client" && (
+          {userData?.me.role === UserRole.Client && (
             <span className=" text-center mt-5 mb-3  text-2xl text-blue-400">
               Status: {data?.getOrder.order?.status}
             </span>
           )}
-          {userData?.me.role === "Owner" && (
+          {userData?.me.role === UserRole.Owner && (
             <>
               {data?.getOrder.order?.status === OrderStatus.Pending && (
                 <button
-                  onClick={() => onButtonClick(OrderStatus.Cooking)}
+                  onClick={() => onOwnersButtonClick(OrderStatus.Cooking)}
                   className="btn bg-blue-400 w-1/4 mx-auto rounded-md"
                 >
                   Accept Order
@@ -146,7 +146,7 @@ const Order = () => {
               )}
               {data?.getOrder.order?.status === OrderStatus.Cooking && (
                 <button
-                  onClick={() => onButtonClick(OrderStatus.Cooked)}
+                  onClick={() => onOwnersButtonClick(OrderStatus.Cooked)}
                   className="btn bg-blue-400 w-1/4 mx-auto rounded-md"
                 >
                   Order Cooked
@@ -154,6 +154,32 @@ const Order = () => {
               )}
               {data?.getOrder.order?.status !== OrderStatus.Cooking &&
                 data?.getOrder.order?.status !== OrderStatus.Pending && (
+                  <span className=" text-center mt-5 mb-3  text-2xl text-blue-400">
+                    Status: {data?.getOrder.order?.status}
+                  </span>
+                )}
+            </>
+          )}
+          {userData?.me.role === UserRole.Delivery && (
+            <>
+              {data?.getOrder.order?.status === OrderStatus.Cooked && (
+                <button
+                  onClick={() => onOwnersButtonClick(OrderStatus.PickedUp)}
+                  className="btn bg-blue-400 w-1/4 mx-auto rounded-md"
+                >
+                  Pick up
+                </button>
+              )}
+              {data?.getOrder.order?.status === OrderStatus.PickedUp && (
+                <button
+                  onClick={() => onOwnersButtonClick(OrderStatus.Dilevered)}
+                  className="btn bg-blue-400 w-1/4 mx-auto rounded-md"
+                >
+                  Delivered
+                </button>
+              )}
+              {data?.getOrder.order?.status !== OrderStatus.Cooked &&
+                data?.getOrder.order?.status !== OrderStatus.PickedUp && (
                   <span className=" text-center mt-5 mb-3  text-2xl text-blue-400">
                     Status: {data?.getOrder.order?.status}
                   </span>

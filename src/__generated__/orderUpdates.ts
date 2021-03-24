@@ -17,6 +17,7 @@ export interface orderUpdates_orderUpdates_driver {
 export interface orderUpdates_orderUpdates_customer {
   __typename: "User";
   email: string;
+  address: string | null;
 }
 
 export interface orderUpdates_orderUpdates_restaurant {
