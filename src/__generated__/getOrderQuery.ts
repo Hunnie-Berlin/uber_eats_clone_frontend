@@ -23,6 +23,7 @@ export interface getOrderQuery_getOrder_order_customer {
 export interface getOrderQuery_getOrder_order_restaurant {
   __typename: "Restaurant";
   name: string;
+  address: string;
 }
 
 export interface getOrderQuery_getOrder_order {

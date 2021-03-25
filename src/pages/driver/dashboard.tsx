@@ -32,44 +32,100 @@ interface ICoords {
   lng: number;
 }
 
-interface IDriverProps {
+interface IProps {
   lat: number;
   lng: number;
   $hover?: any;
 }
 
-const Driver: React.FC<IDriverProps> = () => <div className="text-xl">🛵</div>;
+const DriverMarker: React.FC<IProps> = () => <div className="text-xl">🛵</div>;
+const CustomerMarker: React.FC<IProps> = () => (
+  <div className="text-xl">🏠</div>
+);
+const RestaurantMarker: React.FC<IProps> = () => (
+  <div className="text-xl">🌮</div>
+);
 
 const Dashboard = () => {
   const [driverCoords, setDriverCoords] = useState<ICoords>({
     lat: 52.519239728282656,
     lng: 13.401119386507174,
   });
+
+  const [restaurantCoords, setRestaurantCoords] = useState<ICoords>({
+    lat: 52.519239728282656,
+    lng: 13.401119386507174,
+  });
+
+  const [customerCoords, setCustomerCoords] = useState<ICoords>({
+    lat: 52.519239728282656,
+    lng: 13.401119386507174,
+  });
+
+  const [isCoords, setIsCoords] = useState<boolean>(false);
+
   const [map, setMap] = useState<google.maps.Map>();
+
   const onSuccess = ({
     coords: { latitude, longitude },
   }: GeolocationPosition) => {
     setDriverCoords({ lat: latitude, lng: longitude });
   };
+
   const onError = (error: GeolocationPositionError) => {
     console.log(error);
   };
+
   useEffect(() => {
     navigator.geolocation.watchPosition(onSuccess, onError, {
       enableHighAccuracy: true,
     });
   }, []);
+
   useEffect(() => {
     if (map) {
       map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng));
     }
   }, [driverCoords.lat, driverCoords.lng, map]);
+
   const onApiLoaded = ({ map, maps }: { map: any; maps: any }) => {
     map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng));
     setMap(map);
   };
 
+  const { data: cookedOrdersData } = useSubscription<cookedOrders>(
+    COOKED_ORDERS_SUBSCRIPTION
+  );
+
+  const setCoords = () => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+      { address: cookedOrdersData?.cookedOrders.restaurant?.address },
+      async (results, status) => {
+        if (status === "OK") {
+          setRestaurantCoords({
+            lat: await results![0].geometry.location.lat(),
+            lng: await results![0].geometry.location.lng(),
+          });
+        }
+      }
+    );
+    geocoder.geocode(
+      { address: cookedOrdersData?.cookedOrders.customer?.address },
+      async (results, status) => {
+        if (status === "OK") {
+          setCustomerCoords({
+            lat: await results![0].geometry.location.lat(),
+            lng: await results![0].geometry.location.lng(),
+          });
+        }
+      }
+    );
+    setIsCoords(true);
+  };
+
   const makeRoute = () => {
+    console.log(customerCoords, restaurantCoords, driverCoords);
     if (map) {
       const directionsService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer();
@@ -78,36 +134,39 @@ const Dashboard = () => {
         {
           origin: {
             location: new google.maps.LatLng(
-              driverCoords.lat,
-              driverCoords.lng
+              restaurantCoords.lat,
+              restaurantCoords.lng
             ),
           },
           destination: {
             location: new google.maps.LatLng(
-              driverCoords.lat + 0.02,
-              driverCoords.lng + 0.02
+              customerCoords.lat,
+              customerCoords.lng
             ),
           },
           travelMode: google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
-          console.log(result, status);
           directionsRenderer.setDirections(result);
         }
       );
     }
   };
 
-  const { data: cookedOrdersData } = useSubscription<cookedOrders>(
-    COOKED_ORDERS_SUBSCRIPTION
-  );
   useEffect(() => {
     if (cookedOrdersData?.cookedOrders.id) {
-      makeRoute();
+      setCoords();
     }
   }, [cookedOrdersData]);
 
+  useEffect(() => {
+    if (cookedOrdersData?.cookedOrders.id && isCoords) {
+      makeRoute();
+    }
+  }, [customerCoords]);
+
   const history = useHistory();
+
   const onCompleted = (data: takeOrderMutation) => {
     if (data.takeOrder.ok) {
       history.push(`/orders/${cookedOrdersData?.cookedOrders.id}`);
@@ -128,6 +187,7 @@ const Dashboard = () => {
       },
     });
   };
+
   return (
     <div>
       <div style={{ width: window.innerWidth, height: "45vh" }}>
@@ -140,7 +200,16 @@ const Dashboard = () => {
           yesIWantToUseGoogleMapApiInternals
           onGoogleApiLoaded={onApiLoaded}
         >
-          <Driver lat={driverCoords.lat} lng={driverCoords.lng} />
+          <DriverMarker lat={driverCoords.lat} lng={driverCoords.lng} />
+          {isCoords && (
+            <RestaurantMarker
+              lat={restaurantCoords.lat}
+              lng={restaurantCoords.lng}
+            />
+          )}
+          {isCoords && (
+            <CustomerMarker lat={customerCoords.lat} lng={customerCoords.lng} />
+          )}
         </GoogleMapReact>
       </div>
       <div className="max-w-screen-sm mx-auto bg-white relative -top-10 shadow-lg py-8 px-5">
@@ -150,7 +219,8 @@ const Dashboard = () => {
               New Cooked Order Arrived
             </h1>
             <h4 className="mt-3 text-gray-500 font-light ">
-              Restaurant: {cookedOrdersData?.cookedOrders.restaurant?.name}
+              Restaurant: {cookedOrdersData?.cookedOrders.restaurant?.name} (
+              {cookedOrdersData.cookedOrders.restaurant?.address})
             </h4>
             <h4 className="mt-3 text-gray-500 font-light ">
               Customer: {cookedOrdersData?.cookedOrders.customer?.address}

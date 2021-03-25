@@ -23,6 +23,7 @@ export interface pendingOrders_pendingOrders_customer {
 export interface pendingOrders_pendingOrders_restaurant {
   __typename: "Restaurant";
   name: string;
+  address: string;
 }
 
 export interface pendingOrders_pendingOrders {

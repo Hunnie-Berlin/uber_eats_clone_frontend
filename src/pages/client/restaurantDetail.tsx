@@ -177,14 +177,14 @@ const RestaurantDetail = () => {
         </div>
       </div>
       <div className="container">
-        <div className="h-10 mt-5 grid grid-cols-6 gap-7">
+        <div className="h-10 mt-5 grid md:grid-cols-6 gap-7">
           <div className="bg-gray-300 col-start-3 col-span-2 rounded-lg flex justify-center items-center">
             Total Price: $ {totalPrice.toFixed(2)}
           </div>
           {canOrder && (
             <button
               onClick={goToCheckout}
-              className="btn bg-red-400 opacity-50 hover:opacity-100 rounded-lg mx-5 xl:mx-0 col-end-7 col-span-1p "
+              className="btn bg-red-400 opacity-50 hover:opacity-100 rounded-lg mx-5 xl:mx-0 col-end-7 col-span-1"
             >
               ORDER
             </button>

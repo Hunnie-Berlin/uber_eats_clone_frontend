@@ -8,7 +8,7 @@ import {
   addAddress,
   addAddressVariables,
 } from "../../__generated__/addAddress";
-import { useHistory } from "react-router";
+import FormError from "../../components/form-error";
 
 const ADD_ADDRESS_MUTATION = gql`
   mutation addAddress($input: AddAddressInput!) {
@@ -31,6 +31,10 @@ interface IHomeProps {
   $hover?: any;
 }
 
+interface IForm {
+  address?: string;
+}
+
 const Home: React.FC<IHomeProps> = ({ address }) => (
   <div className="flex items-center">
     <div className="text-xl">🏠</div>
@@ -41,7 +45,13 @@ const Home: React.FC<IHomeProps> = ({ address }) => (
 );
 
 const AddAddress = () => {
-  const { register, handleSubmit, setValue } = useForm();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setError,
+    errors,
+  } = useForm<IForm>();
   const { data: userData } = useMe();
   const [addAddress] = useMutation<addAddress, addAddressVariables>(
     ADD_ADDRESS_MUTATION
@@ -52,6 +62,7 @@ const AddAddress = () => {
   });
   const [map, setMap] = useState<google.maps.Map>();
   const [address, setAddress] = useState<string>();
+
   const onSuccess = ({
     coords: { latitude, longitude },
   }: GeolocationPosition) => {
@@ -61,7 +72,7 @@ const AddAddress = () => {
     console.log(error);
   };
   useEffect(() => {
-    navigator.geolocation.watchPosition(onSuccess, onError, {
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, {
       enableHighAccuracy: true,
     });
   }, []);
@@ -75,29 +86,43 @@ const AddAddress = () => {
         (results, status) => {
           if (status === "OK") {
             setAddress(results![0].formatted_address);
-            setValue("address", address);
+            map.panTo(new google.maps.LatLng(homeCoords.lat, homeCoords.lng));
           }
         }
       );
     }
-  }, [address, homeCoords, map, setValue]);
+  }, [map, homeCoords]);
+
   const onApiLoaded = ({ map, maps }: { map: any; maps: any }) => {
     map.panTo(new google.maps.LatLng(homeCoords.lat, homeCoords.lng));
     setMap(map);
   };
 
   const onSubmit = () => {
-    if (userData?.me.id) {
-      addAddress({
-        variables: {
-          input: {
-            id: userData?.me.id,
-            address,
-          },
-        },
-      });
-      window.location.reload();
-    }
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ address: getValues().address }, (result, status) => {
+      console.log(result, status);
+      if (status === "OK" && userData?.me.id) {
+        const OK = window.confirm(
+          `Are you sure with the address, ${getValues().address}`
+        );
+        if (OK) {
+          addAddress({
+            variables: {
+              input: {
+                id: userData?.me.id,
+                address: getValues().address,
+              },
+            },
+          });
+          window.location.reload();
+        }
+      } else if (status === "ZERO_RESULTS") {
+        setError("address", {
+          message: "The address is not correct. Please check it.",
+        });
+      }
+    });
   };
   return (
     <div className="flex flex-col justify-center items-center">
@@ -108,7 +133,7 @@ const AddAddress = () => {
             key: "AIzaSyD5HRxHCa2dlHti96X09CP6hziEsFlW6-E",
           }}
           defaultCenter={homeCoords}
-          defaultZoom={19}
+          defaultZoom={15}
           yesIWantToUseGoogleMapApiInternals
           onGoogleApiLoaded={onApiLoaded}
         >
@@ -120,15 +145,24 @@ const AddAddress = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="grid max-w-screen-sm gap-6 mt-24 w-full"
       >
-        <h1 className="py-2 bg-blue-200 w-full rounded-lg text-2xl text-blue-500 font-light text-center">
-          Is it your correct address?
-        </h1>
+        <div className="py-2 bg-blue-200 w-full rounded-lg">
+          <h1 className="text-2xl text-blue-500 font-light text-center">
+            Complete your address.
+          </h1>
+          <h4 className="text-center text-sm text-pink-900 mt-1">
+            If the address is not correct, delivery may be delayed.
+          </h4>
+        </div>
         <input
           ref={register({ required: true })}
           type="text"
           name="address"
+          defaultValue={address}
           className="input rounded-lg"
         />
+        {errors.address?.message && (
+          <FormError errorMessage={errors.address.message} />
+        )}
         <button className="btn bg-red-400 rounded-lg">Confirm</button>
       </form>
     </div>

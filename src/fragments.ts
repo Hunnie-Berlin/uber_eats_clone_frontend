@@ -65,6 +65,7 @@ export const ORDER_FRAGEMENT = gql`
     }
     restaurant {
       name
+      address
     }
   }
 `;

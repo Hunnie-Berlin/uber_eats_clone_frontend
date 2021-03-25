@@ -23,6 +23,7 @@ export interface OrderParts_customer {
 export interface OrderParts_restaurant {
   __typename: "Restaurant";
   name: string;
+  address: string;
 }
 
 export interface OrderParts {

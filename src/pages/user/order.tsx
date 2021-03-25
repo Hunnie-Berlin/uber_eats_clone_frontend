@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import PageTitle from "../../components/page-title";
 import { ORDER_FRAGEMENT } from "../../fragments";
@@ -50,7 +50,13 @@ interface IParams {
   id: string;
 }
 
+// interface IItems {
+//   itemDetail: string;
+//   amount: number;
+// }
+
 const Order = () => {
+  // const [item, setItem] = useState<IItems>();
   const { id } = useParams<IParams>();
   const { data: userData } = useMe();
   const [editOrder] = useMutation<
@@ -99,7 +105,7 @@ const Order = () => {
       },
     });
   };
-
+  console.log(data);
   return (
     <div className="mt-32 container flex justify-center">
       <PageTitle title={`Order #${id}` || "Order"} />
@@ -114,13 +120,14 @@ const Order = () => {
           <div className="border-t pt-5 border-blue-200">
             Prepared By:{" "}
             <span className="font-light">
-              {data?.getOrder.order?.restaurant?.name}
+              {data?.getOrder.order?.restaurant?.name} (
+              {data?.getOrder.order?.restaurant?.address})
             </span>
           </div>
           <div className="border-t pt-5 border-blue-200 ">
             Deliver To:{" "}
             <span className="font-light">
-              {data?.getOrder.order?.customer?.email}
+              {data?.getOrder.order?.customer?.address}
             </span>
           </div>
           <div className="border-t border-b py-5 border-blue-200">

@@ -23,6 +23,7 @@ export interface cookedOrders_cookedOrders_customer {
 export interface cookedOrders_cookedOrders_restaurant {
   __typename: "Restaurant";
   name: string;
+  address: string;
 }
 
 export interface cookedOrders_cookedOrders {
