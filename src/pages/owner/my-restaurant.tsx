@@ -154,12 +154,6 @@ const MyRestaurant = () => {
           >
             Add Dish &rarr;
           </Link>
-          <Link
-            to={`/`}
-            className="w-60 mr-8 text-white bg-lime-500 hover:bg-lime-600 transition-colors py-3 px-10 rounded-md  text-center active:animate-clickAnimation mt-2"
-          >
-            Buy Promotion &rarr;
-          </Link>
         </div>
         <div className="mt-20 mb-10">
           <h2 className="text-2xl font-medium text-center">sales</h2>
