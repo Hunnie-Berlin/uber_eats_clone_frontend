@@ -17,7 +17,10 @@ export const authTokenVar = makeVar(token);
 export const restaurantsPage = makeVar(1);
 
 const wsLink = new WebSocketLink({
-  uri: "wss://hunnie-eats-backend.herokuapp.com/graphql",
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "wss://hunnie-eats-backend.herokuapp.com/graphql"
+      : "ws://localhost:4000/graphql",
   options: {
     reconnect: true,
     connectionParams: {
@@ -27,7 +30,10 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = createHttpLink({
-  uri: "https://hunnie-eats-backend.herokuapp.com/graphql",
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://hunnie-eats-backend.herokuapp.com/graphql"
+      : "http://localhost:4000/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
