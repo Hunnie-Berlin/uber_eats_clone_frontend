@@ -6,7 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import { restaurantsPage, isLoggedInVar, authTokenVar } from "../apollo";
 import { LOCALSTORAGE_TOKEN } from "../constants";
 import useMe from "../hooks/useMe";
-import Logo from "../images/eats-logo.svg";
+import Logo from "../images/eats-logo.png";
 
 const Header: React.FC = () => {
   const { data } = useMe();
@@ -29,7 +29,7 @@ const Header: React.FC = () => {
       <header className="py-4">
         <div className="w-full px-5 max-w-screen-xl mx-auto flex items-center justify-between">
           <Link to="/" onClick={() => restaurantsPage(1)}>
-            <img src={Logo} alt={"logo"} className="w-36 " />
+            <img src={Logo} alt={"logo"} className="w-44" />
           </Link>
           <span className="text-xs">
             <Link to="/edit-profile">

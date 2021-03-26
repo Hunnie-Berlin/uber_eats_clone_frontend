@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 import FormError from "../components/form-error";
-import Logo from "../images/eats-logo.svg";
+import Logo from "../images/eats-logo.png";
 import Button from "../components/button";
 import { Link, useHistory } from "react-router-dom";
 import { UserRole } from "../__generated__/globalTypes";
@@ -75,7 +75,7 @@ const CreateAccount = () => {
     <div className="h-screen flex flex-col items-center mt-10 lg:mt-28">
       <PageTitle title="Create Account" />
       <div className="w-full max-w-screen-sm px-5 flex flex-col items-center">
-        <img src={Logo} alt={"logo"} className="w-56 mb-12" />
+        <img src={Logo} alt={"logo"} className="w-80 mb-12" />
         <h4 className="w-full text-3xl font-medium mb-8">Let's get started</h4>
         <form
           onSubmit={handleSubmit(onSubmit)}
