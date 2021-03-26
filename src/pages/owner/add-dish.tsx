@@ -70,10 +70,15 @@ const AddDish = () => {
       const formBody = new FormData();
       formBody.append("file", actualFile);
       const { url: coverImg } = await (
-        await fetch("http://localhost:4000/uploads", {
-          method: "POST",
-          body: formBody,
-        })
+        await fetch(
+          process.env.NODE_ENV === "production"
+            ? "https://hunnie-eats-backend.herokuapp.com/uploads"
+            : "http://localhost:4000/uploads",
+          {
+            method: "POST",
+            body: formBody,
+          }
+        )
       ).json();
       setImgUrl(coverImg);
       createDish({
