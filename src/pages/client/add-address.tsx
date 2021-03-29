@@ -163,7 +163,7 @@ const AddAddress = () => {
         {errors.address?.message && (
           <FormError errorMessage={errors.address.message} />
         )}
-        <button className="btn bg-red-400 rounded-lg">Confirm</button>
+        <button className="btn bg-red-400 rounded-lg mb-6">Confirm</button>
       </form>
     </div>
   );
