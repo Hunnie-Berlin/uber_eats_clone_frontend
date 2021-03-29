@@ -125,7 +125,6 @@ const Dashboard = () => {
   };
 
   const makeRoute = () => {
-    console.log(customerCoords, restaurantCoords, driverCoords);
     if (map) {
       const directionsService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer();

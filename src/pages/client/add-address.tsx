@@ -101,7 +101,6 @@ const AddAddress = () => {
   const onSubmit = () => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ address: getValues().address }, (result, status) => {
-      console.log(result, status);
       if (status === "OK" && userData?.me.id) {
         const OK = window.confirm(
           `Are you sure with the address, ${getValues().address}`

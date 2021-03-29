@@ -105,7 +105,6 @@ const Order = () => {
       },
     });
   };
-  console.log(data);
   return (
     <div className="mt-32 container flex justify-center">
       <PageTitle title={`Order #${id}` || "Order"} />
